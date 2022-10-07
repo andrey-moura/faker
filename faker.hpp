@@ -4,6 +4,8 @@
 #include <vector>
 #include <random>
 
+#include <string.hpp>
+
 namespace uva
 {
     namespace faker
@@ -39,6 +41,12 @@ namespace uva
         {
             std::string product();
             double price(double min = 0.0, double max = 100.0);
+        };
+
+        namespace lorem
+        {
+            std::string word();
+            std::string sentence(int min_words = 0, int max_words = 10);
         };
     };
 };
