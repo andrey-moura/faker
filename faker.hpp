@@ -46,7 +46,10 @@ namespace uva
         namespace lorem
         {
             std::string word();
-            std::string sentence(int min_words = 0, int max_words = 10);
+            std::string sentence_begin();
+            std::string sentence_end();
+            std::string sentence(int min_words = 4, int max_words = 10);
+            std::string paragraph(int setences = 1);
         };
     };
 };
