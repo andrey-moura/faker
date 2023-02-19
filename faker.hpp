@@ -28,7 +28,9 @@ namespace uva
             /// @brief Generates an random integer
             /// @return An integer between std::numeric_limits<int>::min() and std::numeric_limits<int>::max ();
             int integer();
-
+            /// @brief Generates an random real
+            /// @return An double between std::numeric_limits<double>::min() and std::numeric_limits<double>::max ();
+            double real();
         };
 
         namespace sequence

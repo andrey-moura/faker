@@ -207,3 +207,8 @@ int uva::faker::number::integer()
 {
     return random_integer(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
 }
+
+double uva::faker::number::real()
+{
+    return random_double(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
+}
