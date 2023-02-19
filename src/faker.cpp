@@ -196,7 +196,12 @@ std::string uva::faker::lorem::sentence(int min_words, int max_words)
 
 std::string uva::faker::lorem::paragraph(int setences)
 {
-
+    throw std::exception("function not implemented");
 }
 
 // LOREM END
+
+int uva::faker::number::integer()
+{
+    return random_integer(INT_MIN, INT_MAX);
+}

@@ -23,6 +23,13 @@ namespace uva
             return from[random_index];
         }
 
+        namespace number
+        {
+            /// @brief Generates an random integer
+            /// @return An integer between INT_MIN and INT_MAX
+            int integer();
+        };
+
         namespace sequence
         {
             template<typename T>
