@@ -1,3 +1,5 @@
+#include <limits>
+
 #include <faker.hpp>
 
 int uva::faker::random_integer(int min, int max)
@@ -203,5 +205,5 @@ std::string uva::faker::lorem::paragraph(int setences)
 
 int uva::faker::number::integer()
 {
-    return random_integer(INT_MIN, INT_MAX);
+    return random_integer(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
 }
