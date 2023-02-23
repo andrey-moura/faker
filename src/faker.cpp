@@ -6,16 +6,21 @@ int uva::faker::random_integer(int min, int max)
 {
     std::random_device rd;  // Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
-    std::uniform_int_distribution<> dis(min, max);
+    std::uniform_int_distribution<> dis(min, max-1);
 
     return dis(gen);
+}
+
+bool uva::faker::boolean()
+{
+    return uva::faker::number::integer() % 2 == 0;
 }
 
 double uva::faker::random_double(double min, double max)
 {
     std::random_device rd;  // Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
-    std::uniform_real_distribution<> dis(min, max);
+    std::uniform_real_distribution<> dis(min, max-1);
 
     return dis(gen);
 }
@@ -146,6 +151,11 @@ std::string uva::faker::lorem::word()
     return word;
 }
 
+const char *uva::faker::lorem::cword()
+{
+    return pick_one(get_lorem_setence_begin()).data();
+}
+
 std::string uva::faker::lorem::sentence_begin()
 {
     return std::string(pick_one(get_lorem_setence_begin()));
@@ -203,12 +213,110 @@ std::string uva::faker::lorem::paragraph(int setences)
 
 // LOREM END
 
+// NUMBER
+
+uint8_t uva::faker::number::byte()
+{
+    return (uint8_t)random_integer(0, 255);
+}
+
 int uva::faker::number::integer()
 {
     return random_integer(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
 }
 
+int uva::faker::number::integer(int min, int max)
+{
+    return random_integer(min, max);
+}
+
 double uva::faker::number::real()
 {
-    return random_double(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
+    return random_double(std::numeric_limits<double>::min(), std::numeric_limits<double>::max());
+}
+
+// COLOR
+
+uva::color uva::faker::drawing::color()
+{
+    return uva::color(uva::faker::number::byte(), uva::faker::number::byte(), uva::faker::number::byte(), uva::faker::number::byte());
+}
+
+uva::core::var::var_type uva::faker::variable::type()
+{
+    for(int i = 0; i < (int)uva::core::var::var_type::max; ++i)
+    {
+        return (uva::core::var::var_type)i;
+    }
+}
+
+uva::core::var random_var_not_array()
+{
+    uva::core::var::var_type type = uva::faker::variable::type();
+
+    switch(type)
+    {
+    case uva::core::var::var_type::null_type:
+        return uva::core::var();
+    break;
+    case uva::core::var::var_type::integer:
+        return uva::faker::number::integer();
+    break;
+    case uva::core::var::var_type::real:
+        return uva::faker::number::real();
+    break;
+    case uva::core::var::var_type::color:
+        return uva::faker::drawing::color();
+    break;
+    case uva::core::var::var_type::string:
+        return uva::faker::lorem::word();
+    break;
+    case uva::core::var::var_type::array:
+        return uva::faker::number::integer();
+    break;
+    case uva::core::var::var_type::map:
+        return uva::faker::lorem::word();
+    break;
+    default:
+        throw std::runtime_error(std::format("invalid var::var_type {}", (int)type));
+    break;
+    }
+}
+
+uva::core::var random_var_array()
+{
+    std::vector<uva::core::var> array;
+    size_t count = uva::faker::number::integer();
+
+    array.reserve(count);
+
+    for(size_t i = 0; i < count; ++i) {
+        array.push_back(random_var_not_array());
+    }
+
+    return array;
+}
+
+uva::core::var uva::faker::variable::random()
+{
+    /* if random var generates an array, it can be filled with another array who will be filled by another array and so on for all eternity */
+    uva::core::var::var_type type = uva::faker::variable::type();
+
+    switch(type)
+    {
+        case uva::core::var::var_type::null_type:
+        case uva::core::var::var_type::integer:
+        case uva::core::var::var_type::real:
+        case uva::core::var::var_type::color:
+        case uva::core::var::var_type::string:
+            return random_var_not_array();
+        case uva::core::var::var_type::array: {
+            return random_var_array();
+        }
+        case uva::core::var::var_type::map:
+            throw std::runtime_error("random var can not generate map");
+        break;
+    }
+
+    return uva::core::var();
 }
